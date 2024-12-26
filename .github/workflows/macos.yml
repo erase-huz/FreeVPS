@@ -1,0 +1,32 @@
+name: MacOS SSH Virtual Machine
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: mac-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3.5.2
+
+      - name: Update Homebrew
+        run: brew update
+
+      - name: Set Up macOS Environment
+        run: bash macos-run.sh
+        env:
+          MAC_USER_PASSWORD: ${{ secrets.MAC_USER_PASSWORD }}
+          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          MAC_REALNAME: ${{ secrets.MAC_REALNAME }}
+          VNC_PASSWORD: ${{ secrets.VNC_PASSWORD }}
+
+      - name: Keep MacOS System Alive (with Graceful Restart)
+        # Use a while loop for continuous execution
+        run: sleep 6 
+
+        
